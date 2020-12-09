@@ -1,6 +1,7 @@
 package com.bookhub.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class Address {
@@ -25,9 +26,12 @@ public class Address {
 
     private String location;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="owner_id")
     private User owner;
+
+    @OneToMany(mappedBy = "address",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private Set<BookOrder> bookOrderSet;
 
     public Integer getId() {
         return id;
@@ -111,5 +115,13 @@ public class Address {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public Set<BookOrder> BookOrderSetInstance() {
+        return bookOrderSet;
+    }
+
+    public void setBookOrderSet(Set<BookOrder> bookOrderSet) {
+        this.bookOrderSet = bookOrderSet;
     }
 }

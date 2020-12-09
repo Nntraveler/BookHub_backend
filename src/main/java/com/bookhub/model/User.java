@@ -22,10 +22,10 @@ public class User {
 
     private boolean active;
 
-    @OneToMany(mappedBy = "owner",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private Set<Address> addressSet;
 
-    @OneToMany(mappedBy = "owner",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private Set<Cart> cartSet;
 
     public String getId() {

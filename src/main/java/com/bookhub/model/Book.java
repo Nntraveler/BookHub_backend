@@ -37,7 +37,7 @@ public class Book {
     private Date publishTime;
 
 
-    @OneToMany(mappedBy = "book",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private Set<Cart> cartSet;
 
     public Integer getId() {
