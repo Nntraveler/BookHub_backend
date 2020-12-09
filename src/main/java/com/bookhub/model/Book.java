@@ -40,6 +40,9 @@ public class Book {
     @OneToMany(mappedBy = "book",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private Set<Cart> cartSet;
 
+    @OneToMany(mappedBy = "book",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private Set<OrderDetail> orderDetailSet;
+
     public Integer getId() {
         return id;
     }
@@ -142,5 +145,13 @@ public class Book {
 
     public void setSecondhand(Boolean secondhand) {
         this.secondhand = secondhand;
+    }
+
+    public Set<OrderDetail> orderDetailSetInstance() {
+        return orderDetailSet;
+    }
+
+    public void setOrderDetailSet(Set<OrderDetail> orderDetailSet) {
+        this.orderDetailSet = orderDetailSet;
     }
 }

@@ -2,6 +2,7 @@ package com.bookhub.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class BookOrder {
@@ -29,6 +30,9 @@ public class BookOrder {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="address_id")
     private Address address;
+
+    @OneToMany(mappedBy = "bookOrder",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private Set<OrderDetail> orderDetailSet;
 
     public Integer getId() {
         return id;
@@ -96,5 +100,13 @@ public class BookOrder {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Set<OrderDetail> orderDetailSetInstance() {
+        return orderDetailSet;
+    }
+
+    public void setOrderDetailSet(Set<OrderDetail> orderDetailSet) {
+        this.orderDetailSet = orderDetailSet;
     }
 }
