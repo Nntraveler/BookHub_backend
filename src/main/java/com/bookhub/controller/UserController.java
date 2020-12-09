@@ -33,6 +33,7 @@ public class UserController {
     Result<UserInformation> updateUser(@RequestBody Request<User> request){
         return userService.updateUser(request);
     }
+
     @PostMapping(path="/session")
     public @ResponseBody Result<String> getLoginToken(@RequestBody User user) {
         return userService.getLoginToken(user);

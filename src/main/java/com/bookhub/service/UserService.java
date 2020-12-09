@@ -76,7 +76,6 @@ public class UserService {
 
     }
 
-
     public Result<String> sendEmail(String sessionId){
         String id=template.opsForValue().get(sessionId);
         if(id==null) return Result.wrapErrorResult(new InvalidSessionIdError());
@@ -109,6 +108,7 @@ public class UserService {
         return Result.wrapSuccessfulResult(sessionId);
     }
 
+    @Transactional
     public Result<String> validateAccount(Request<String> request){
         String id=template.opsForValue().get(request.getSessionId());
         if(id==null) return Result.wrapErrorResult(new InvalidSessionIdError());

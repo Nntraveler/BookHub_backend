@@ -36,7 +36,6 @@ public class Book {
     @Column(name="publish_time")
     private Date publishTime;
 
-
     @OneToMany(mappedBy = "book",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private Set<Cart> cartSet;
 
