@@ -23,4 +23,51 @@ public class Consultation {
     private User customer;
 
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Set<ConsultDetail> consultDetailSetInstance() {
+        return consultDetailSet;
+    }
+
+    public void setConsultDetailSet(Set<ConsultDetail> consultDetailSet) {
+        this.consultDetailSet = consultDetailSet;
+    }
+
+    public User serviceStaffInstance() {
+        return serviceStaff;
+    }
+
+    public String getServiceStaff() {
+        return serviceStaff.getId();
+    }
+
+    public void setServiceStaff(User serviceStaff) {
+        this.serviceStaff = serviceStaff;
+    }
+
+    public String getCustomer() {
+        return customer.getId();
+    }
+
+    public User customerInstance() {
+        return customer;
+    }
+
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
 }

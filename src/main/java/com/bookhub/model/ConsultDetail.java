@@ -26,4 +26,54 @@ public class ConsultDetail {
     private Consultation consultation;
 
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public Date getQuestionTime() {
+        return questionTime;
+    }
+
+    public void setQuestionTime(Date questionTime) {
+        this.questionTime = questionTime;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public Date getAnswerTime() {
+        return answerTime;
+    }
+
+    public void setAnswerTime(Date answerTime) {
+        this.answerTime = answerTime;
+    }
+
+    public Consultation consultationInstance() {
+        return consultation;
+    }
+
+    public Integer getConsultation() {
+        return consultation.getId();
+    }
+    public void setConsultation(Consultation consultation) {
+        this.consultation = consultation;
+    }
 }
