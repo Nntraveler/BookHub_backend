@@ -28,6 +28,12 @@ public class User {
     @OneToMany(mappedBy = "owner",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private Set<Cart> cartSet;
 
+    @OneToMany(mappedBy = "serviceStaff",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private Set<Consultation> serviceSet;
+
+    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private Set<Consultation> consultationSet;
+
     public String getId() {
         return id;
     }
@@ -106,5 +112,21 @@ public class User {
 
     public void setCartSet(Set<Cart> cartSet) {
         this.cartSet = cartSet;
+    }
+
+    public Set<Consultation> serviceSetInstance() {
+        return serviceSet;
+    }
+
+    public void setServiceSet(Set<Consultation> serviceSet) {
+        this.serviceSet = serviceSet;
+    }
+
+    public Set<Consultation> consultationSetInstance() {
+        return consultationSet;
+    }
+
+    public void setConsultationSet(Set<Consultation> consultationSet) {
+        this.consultationSet = consultationSet;
     }
 }
