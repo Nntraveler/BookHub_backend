@@ -23,14 +23,12 @@ public class UserController {
     }
 
     @GetMapping
-    public @ResponseBody
-    Result<UserInformation> getUser (@RequestParam String sessionId) {
+    public @ResponseBody Result<UserInformation> getUser (@RequestParam String sessionId) {
        return userService.getUser(sessionId);
     }
 
     @PutMapping
-    public @ResponseBody
-    Result<UserInformation> updateUser(@RequestBody Request<User> request){
+    public @ResponseBody Result<UserInformation> updateUser(@RequestBody Request<User> request){
         return userService.updateUser(request);
     }
 

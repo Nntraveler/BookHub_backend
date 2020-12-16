@@ -138,9 +138,6 @@ public class Book {
         this.cartSet = cartSet;
     }
 
-    public Boolean getSecondhand() {
-        return secondhand;
-    }
 
     public void setSecondhand(Boolean secondhand) {
         this.secondhand = secondhand;
@@ -152,5 +149,9 @@ public class Book {
 
     public void setOrderDetailSet(Set<OrderDetail> orderDetailSet) {
         this.orderDetailSet = orderDetailSet;
+    }
+
+    public Boolean getSecondhand() {
+        return secondhand;
     }
 }
