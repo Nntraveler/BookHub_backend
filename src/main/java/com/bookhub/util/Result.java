@@ -28,7 +28,7 @@ public class Result<T> implements Serializable {
         result.data = data;
         result.success = true;
         result.timestamp=new Date();
-        result.code=0;
+        result.code=200;
         return result;
     }
 
@@ -38,7 +38,7 @@ public class Result<T> implements Serializable {
         result.success = true;
         result.message = message;
         result.timestamp=new Date();
-        result.code=0;
+        result.code=200;
         return result;
     }
 

@@ -9,11 +9,14 @@ import com.bookhub.error.UserNotExistedError;
 import com.bookhub.model.Address;
 import com.bookhub.model.User;
 import com.bookhub.util.Result;
+import com.bookhub.util.SessionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,10 +32,14 @@ public class AddressService {
     @Autowired
     StringRedisTemplate template;
 
+    public String resolveSessionIDInCookie(HttpServletRequest request){
+        return SessionValidator.validateSessionID(request, template);
+    }
+
 
     @Transactional
-    public Result<String> addNewAddress (String sessionId,Address address) {
-        String userId=template.opsForValue().get(sessionId);
+    public Result<String> addNewAddress (HttpServletRequest request, Address address) {
+        String userId=resolveSessionIDInCookie(request);
         if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
         User user=new User();
         user.setId(userId);
@@ -41,8 +48,8 @@ public class AddressService {
         return Result.wrapSuccessfulResult("Saved");
     }
 
-    public Result<Address> getAddress (String sessionId, Integer id) {
-        String userId=template.opsForValue().get(sessionId);
+    public Result<Address> getAddress (HttpServletRequest request, Integer id) {
+        String userId=resolveSessionIDInCookie(request);
         if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
         Optional<Address> optionalAddress=addressDAO.findById(id);
         if(!optionalAddress.isPresent()) return  Result.wrapErrorResult(new AddressNotExistedError());
@@ -50,8 +57,8 @@ public class AddressService {
         return Result.wrapSuccessfulResult(optionalAddress.get());
     }
 
-    public Result<Set<Address>> getAllAddress (String sessionId) {
-        String userId=template.opsForValue().get(sessionId);
+    public Result<Set<Address>> getAllAddress (HttpServletRequest request) {
+        String userId=resolveSessionIDInCookie(request);
         if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
         Optional<User> optionalUser=userDAO.findById(userId);
         if(!optionalUser.isPresent()) return  Result.wrapErrorResult(new UserNotExistedError());
@@ -59,8 +66,8 @@ public class AddressService {
     }
 
     @Transactional
-    public  Result<String> updateAddress (Address address, Integer id,String sessionId) {
-        String userId=template.opsForValue().get(sessionId);
+    public  Result<String> updateAddress (Address address, Integer id,HttpServletRequest request) {
+        String userId=resolveSessionIDInCookie(request);
         if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
         User user=new User();
         user.setId(userId);
@@ -74,8 +81,8 @@ public class AddressService {
     }
 
     @Transactional
-    public  Result<String> deleteAddress (Integer id,String sessionId) {
-        String userId=template.opsForValue().get(sessionId);
+    public  Result<String> deleteAddress (Integer id,HttpServletRequest request) {
+        String userId=resolveSessionIDInCookie(request);
         if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
         Optional<Address> optionalAddress=addressDAO.findById(id);
         if(!optionalAddress.isPresent()) return Result.wrapErrorResult(new AddressNotExistedError());

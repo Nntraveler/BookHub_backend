@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path="/users") // This means URL's start with /demo (after Application path)
@@ -23,32 +27,32 @@ public class UserController {
     }
 
     @GetMapping
-    public @ResponseBody Result<UserInformation> getUser (@RequestParam String sessionId) {
-       return userService.getUser(sessionId);
+    public @ResponseBody Result<UserInformation> getUser (HttpServletRequest request) {
+       return userService.getUser(request);
     }
 
     @PutMapping
-    public @ResponseBody Result<UserInformation> updateUser(@RequestBody Request<User> request){
-        return userService.updateUser(request);
+    public @ResponseBody Result<UserInformation> updateUser(@RequestBody Request<User> requestBody, HttpServletRequest request){
+        return userService.updateUser(requestBody, request);
     }
 
     @PostMapping(path="/session")
-    public @ResponseBody Result<String> getLoginToken(@RequestBody User user) {
-        return userService.getLoginToken(user);
+    public @ResponseBody Result<String> getLoginToken(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
+        return userService.getLoginToken(user, request ,response);
     }
 
     @DeleteMapping(path="/session")
-    public @ResponseBody Result<String> invalidateSessionId(@RequestParam String sessionId) {
-       return userService.invalidateSessionId(sessionId);
+    public @ResponseBody Result<String> invalidateSessionId(HttpServletRequest request, HttpServletResponse response) {
+       return userService.invalidateSessionId(request, response);
     }
 
     @PostMapping(path="/validation")
-    public @ResponseBody Result<String> sendEmail(@RequestParam String sessionId) {
-       return userService.sendEmail(sessionId);
+    public @ResponseBody Result<String> sendEmail(HttpServletRequest request) {
+       return userService.sendEmail(request);
     }
 
     @PutMapping(path="/validation")
-    public @ResponseBody Result<String> validateAccount(@RequestBody Request<String> request){
-        return userService.validateAccount(request);
+    public @ResponseBody Result<String> validateAccount(@RequestBody Request<String> requestBody, HttpServletRequest request){
+        return userService.validateAccount(requestBody, request);
     }
 }

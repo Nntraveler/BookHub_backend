@@ -58,6 +58,16 @@ public class BookService {
         return Result.wrapSuccessfulResult(new BookInformation(optionalBook.get()));
     }
 
+    public Result<List<BookInformation>> searchBookByName (String name) {
+        List<Book> books=bookDAO.findBooksByNameLike(name);
+        List<BookInformation> bookInformationList= new LinkedList<>();
+        for(Book book: books){
+            bookInformationList.add(new BookInformation(book));
+        }
+        return Result.wrapSuccessfulResult(bookInformationList);
+    }
+
+
     public Result<List<BookInformation>> getBookInformationByPage(Integer pageNum, Integer pageSize){
         if(pageNum==null){
             pageNum=1;
@@ -70,7 +80,7 @@ public class BookService {
         Sort sort=Sort.by(Sort.Direction.DESC,"id");
         Pageable pageable=PageRequest.of(pageNum-1,pageSize,sort);
         Page<Book> bookPage=bookDAO.findAll(pageable);
-        List<BookInformation> bookInformationList=new LinkedList<BookInformation>();
+        List<BookInformation> bookInformationList= new LinkedList<>();
         for(Book book:bookPage){
             bookInformationList.add(new BookInformation(book));
         }
@@ -84,7 +94,7 @@ public class BookService {
         Optional<User> optionalUser=userDAO.findById(userId);
         if(!optionalUser.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
         if(!optionalUser.get().getAuthority().equals(Role.INVENTORY_MANAGER.ordinal()))
-            return Result.wrapErrorResult(new PermissionDeniedError());;
+            return Result.wrapErrorResult(new PermissionDeniedError());
         Optional<Book> optionalBook=bookDAO.findById(id);
         if(!optionalBook.isPresent()) return Result.wrapErrorResult(new BookNotExistedError());
         book.setId(id);
@@ -100,7 +110,7 @@ public class BookService {
         Optional<User> optionalUser=userDAO.findById(userId);
         if(!optionalUser.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
         if(!optionalUser.get().getAuthority().equals(Role.INVENTORY_MANAGER.ordinal()))
-            return Result.wrapErrorResult(new PermissionDeniedError());;
+            return Result.wrapErrorResult(new PermissionDeniedError());
         Optional<Book> optionalBook=bookDAO.findById(id);
         if(!optionalBook.isPresent()) return Result.wrapErrorResult(new BookNotExistedError());
         bookDAO.delete(optionalBook.get());
@@ -114,7 +124,7 @@ public class BookService {
         Optional<User> optionalUser=userDAO.findById(userId);
         if(!optionalUser.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
         if(!optionalUser.get().getAuthority().equals(Role.INVENTORY_MANAGER.ordinal()))
-            return Result.wrapErrorResult(new PermissionDeniedError());;
+            return Result.wrapErrorResult(new PermissionDeniedError());
         Optional<Book> optionalBook=bookDAO.findById(id);
         if(!optionalBook.isPresent()) return  Result.wrapErrorResult(new BookNotExistedError());
         String imageUrl=ossService.uploadFile(file);
