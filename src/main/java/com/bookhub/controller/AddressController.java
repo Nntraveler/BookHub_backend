@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 @Controller // This means that this class is a Controller
@@ -18,27 +19,27 @@ public class AddressController {
     AddressService addressService;
 
     @PostMapping
-    public @ResponseBody Result<String> addNewAddress (@RequestBody Request<Address> request) {
-        return addressService.addNewAddress(request.getSessionId(),request.getData());
+    public @ResponseBody Result<String> addNewAddress (@RequestBody Request<Address> requestBody, HttpServletRequest request) {
+        return addressService.addNewAddress(request,requestBody.getData());
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody Result<Address> getAddress (@RequestParam String sessionId,@PathVariable Integer id) {
-        return addressService.getAddress(sessionId,id);
+    public @ResponseBody Result<Address> getAddress (HttpServletRequest request,@PathVariable Integer id) {
+        return addressService.getAddress(request,id);
     }
 
     @GetMapping
-    public @ResponseBody Result<Set<Address>> getAllAddress (@RequestParam String sessionId) {
-        return addressService.getAllAddress(sessionId);
+    public @ResponseBody Result<Set<Address>> getAllAddress (HttpServletRequest request) {
+        return addressService.getAllAddress(request);
     }
 
     @PutMapping("/{id}")
-    public @ResponseBody Result<String> updateAddress (@RequestBody Request<Address> request,@PathVariable Integer id){
-        return addressService.updateAddress(request.getData(),id,request.getSessionId());
+    public @ResponseBody Result<String> updateAddress (@RequestBody Request<Address> requestBody,@PathVariable Integer id, HttpServletRequest request){
+        return addressService.updateAddress(requestBody.getData(),id,request);
     }
 
     @DeleteMapping("/{id}")
-    public @ResponseBody Result<String> deleteAddress (@RequestBody String sessionId,@PathVariable Integer id){
-        return addressService.deleteAddress(id,sessionId);
+    public @ResponseBody Result<String> deleteAddress (HttpServletRequest request,@PathVariable Integer id){
+        return addressService.deleteAddress(id,request);
     }
 }

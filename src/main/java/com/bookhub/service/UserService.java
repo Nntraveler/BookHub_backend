@@ -6,6 +6,7 @@ import com.bookhub.model.User;
 import com.bookhub.util.HashHelper;
 import com.bookhub.util.Request;
 import com.bookhub.util.Result;
+import com.bookhub.util.SessionValidator;
 import com.bookhub.view.UserInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +16,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+
 
 @Service
 public class UserService {
@@ -33,6 +38,10 @@ public class UserService {
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    public String resolveSessionIDInCookie(HttpServletRequest request){
+        return SessionValidator.validateSessionID(request, template);
+    }
 
     @Transactional
     public Result<String> addNewUser (User user) {
@@ -52,10 +61,10 @@ public class UserService {
         return Result.wrapSuccessfulResult("Saved");
     }
 
-    public Result<UserInformation> getUser (String sessionId) {
+    public Result<UserInformation> getUser (HttpServletRequest request) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
-        String id=template.opsForValue().get(sessionId);
+        String id=resolveSessionIDInCookie(request);
         if(id==null) return Result.wrapErrorResult(new InvalidSessionIdError());
         Optional<User>  optionalUser=userDAO.findById(id);
         if(!optionalUser.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
@@ -63,21 +72,21 @@ public class UserService {
     }
 
     @Transactional
-    public Result<UserInformation> updateUser(Request<User> request){
-        String id=template.opsForValue().get(request.getSessionId());
+    public Result<UserInformation> updateUser(Request<User> requestBody, HttpServletRequest request){
+        String id = resolveSessionIDInCookie(request);
         if(id==null) return Result.wrapErrorResult(new InvalidSessionIdError());
-        Optional<User>  optionalUser=userDAO.findById(id);
+        Optional<User> optionalUser=userDAO.findById(id);
         if(!optionalUser.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
-        optionalUser.get().setEmail(request.getData().getEmail());
-        optionalUser.get().setGender(request.getData().getGender());
-        optionalUser.get().setName(request.getData().getName());
+        optionalUser.get().setEmail(requestBody.getData().getEmail());
+        optionalUser.get().setGender(requestBody.getData().getGender());
+        optionalUser.get().setName(requestBody.getData().getName());
         userDAO.save(optionalUser.get());
         return Result.wrapSuccessfulResult(new UserInformation(optionalUser.get()));
 
     }
 
-    public Result<String> sendEmail(String sessionId){
-        String id=template.opsForValue().get(sessionId);
+    public Result<String> sendEmail(HttpServletRequest request){
+        String id=resolveSessionIDInCookie(request);
         if(id==null) return Result.wrapErrorResult(new InvalidSessionIdError());
         Optional<User>  optionalUser=userDAO.findById(id);
         if(!optionalUser.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
@@ -95,7 +104,7 @@ public class UserService {
         return Result.wrapSuccessfulResult("Validated Number is sent.");
     }
 
-    public Result<String> getLoginToken(User user) {
+    public Result<String> getLoginToken(User user, HttpServletRequest request, HttpServletResponse response) {
         String sessionId;
         Optional<User> opt=userDAO.findById(user.getId());
         if(!opt.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
@@ -105,27 +114,35 @@ public class UserService {
         sessionId=HashHelper.computeMD5Hash(user.getId()+ seed);
         if(sessionId==null) return Result.wrapErrorResult(new NullError());
         template.opsForValue().set(sessionId,user.getId(),3, TimeUnit.HOURS);
+        Cookie cookie = new Cookie("sessionID", sessionId);
+        cookie.setMaxAge(3*60*60);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return Result.wrapSuccessfulResult(sessionId);
     }
 
     @Transactional
-    public Result<String> validateAccount(Request<String> request){
-        String id=template.opsForValue().get(request.getSessionId());
+    public Result<String> validateAccount(Request<String> requestBody, HttpServletRequest request){
+        String id = resolveSessionIDInCookie(request);
         if(id==null) return Result.wrapErrorResult(new InvalidSessionIdError());
         Optional<User> optionalUser=userDAO.findById(id);
         if(!optionalUser.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
         String validateNum=template.opsForValue().get(optionalUser.get().getId()+optionalUser.get().getSalt());
-        if(!request.getData().equals(validateNum)) return  Result.wrapErrorResult(new WrongValidateNumError());
+        if(!requestBody.getData().equals(validateNum)) return Result.wrapErrorResult(new WrongValidateNumError());
         optionalUser.get().setActive(true);
         userDAO.save(optionalUser.get());
         return Result.wrapSuccessfulResult("Validate successfully!");
     }
 
 
-    public Result<String> invalidateSessionId(String sessionId) {
-        String id=template.opsForValue().get(sessionId);
+    public Result<String> invalidateSessionId(HttpServletRequest request, HttpServletResponse response) {
+        String id = resolveSessionIDInCookie(request);
         if(id==null) return Result.wrapErrorResult(new InvalidSessionIdError());
-        template.delete(sessionId);
+        template.delete(id);
+        Cookie cookie = new Cookie("sessionID", "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return Result.wrapSuccessfulResult("logout!");
     }
 
