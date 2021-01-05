@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
@@ -12,4 +14,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface BookDAO extends CrudRepository<Book, Integer> {
 
     Page<Book> findAll(Pageable pageable);
+    List<Book> findBooksByNameLike(String name);
 }
