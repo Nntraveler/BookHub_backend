@@ -9,6 +9,6 @@ public class PermissionDeniedError implements ServiceError{
 
     @Override
     public Integer getCode() {
-        return 3;
+        return 401;
     }
 }

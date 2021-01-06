@@ -8,6 +8,6 @@ public class CartNotExistedError implements ServiceError {
 
     @Override
     public Integer getCode() {
-        return 14;
+        return 403;
     }
 }

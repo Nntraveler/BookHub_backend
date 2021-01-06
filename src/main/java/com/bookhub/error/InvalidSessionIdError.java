@@ -9,6 +9,6 @@ public class InvalidSessionIdError implements ServiceError{
 
     @Override
     public Integer getCode() {
-        return 1;
+        return 401;
     }
 }

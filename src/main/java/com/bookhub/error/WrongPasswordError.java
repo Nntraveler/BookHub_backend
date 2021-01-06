@@ -9,6 +9,6 @@ public class WrongPasswordError implements ServiceError{
 
     @Override
     public Integer getCode() {
-        return 7;
+        return 403;
     }
 }

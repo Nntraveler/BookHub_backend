@@ -8,6 +8,6 @@ public class NullError implements ServiceError{
 
     @Override
     public Integer getCode() {
-        return 2;
+        return 403;
     }
 }

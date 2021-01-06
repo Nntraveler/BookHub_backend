@@ -25,6 +25,10 @@ public class CartInformation {
         return cart.getQuantity();
     }
 
+    public Double getDiscount() {
+        return cart.bookInstance().getDiscount();
+    }
+
     public Double getPrice(){
         return cart.bookInstance().getPriceAfterDiscount();
     }
