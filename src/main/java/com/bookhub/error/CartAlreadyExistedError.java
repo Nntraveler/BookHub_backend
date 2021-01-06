@@ -1,10 +1,9 @@
 package com.bookhub.error;
 
-public class UnknownGenderError implements ServiceError{
-
+public class CartAlreadyExistedError implements ServiceError {
     @Override
     public String getMessage() {
-        return "Unknown Gender!";
+        return "Cart item already exists!";
     }
 
     @Override

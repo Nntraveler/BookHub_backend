@@ -5,17 +5,33 @@ import javax.persistence.*;
 @Entity
 public class Cart {
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="owner_id")
     private User owner;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="book_id")
     private Book book;
 
@@ -35,9 +51,11 @@ public class Cart {
         return book;
     }
 
-    public Integer getBook() {
+    public Integer getBookId() {
         return book.getId();
     }
+
+    public String getOwnerId(){return owner.getId();}
 
     public void setBook(Book book) {
         this.book = book;

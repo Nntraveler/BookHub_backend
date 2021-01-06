@@ -9,6 +9,6 @@ public class AddressNotExistedError implements ServiceError{
 
     @Override
     public Integer getCode() {
-        return 10;
+        return 403;
     }
 }

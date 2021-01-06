@@ -8,6 +8,6 @@ public class AlreadyValidatedError implements ServiceError {
 
     @Override
     public Integer getCode() {
-        return 9;
+        return 403;
     }
 }

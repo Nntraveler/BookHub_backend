@@ -9,13 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
 @Controller // This means that this class is a Controller
-@RequestMapping(path="/users") // This means URL's start with /demo (after Application path)
+@RequestMapping(path="/api/user") // This means URL's start with /demo (after Application path)
 public class UserController {
     @Autowired
     UserService userService;
@@ -54,5 +53,10 @@ public class UserController {
     @PutMapping(path="/validation")
     public @ResponseBody Result<String> validateAccount(@RequestBody Request<String> requestBody, HttpServletRequest request){
         return userService.validateAccount(requestBody, request);
+    }
+
+    @GetMapping(path="/info")
+    public @ResponseBody Result<UserInformation> getUserInfo(HttpServletRequest request){
+        return userService.getUserInfo(request);
     }
 }

@@ -146,4 +146,12 @@ public class UserService {
         return Result.wrapSuccessfulResult("logout!");
     }
 
+    public Result<UserInformation> getUserInfo(HttpServletRequest request){
+        String id = resolveSessionIDInCookie(request);
+        if(id==null) return Result.wrapErrorResult(new InvalidSessionIdError());
+        Optional<User> optionalUser=userDAO.findById(id);
+        if(!optionalUser.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
+        return Result.wrapSuccessfulResult(new UserInformation(optionalUser.get()));
+    }
+
 }

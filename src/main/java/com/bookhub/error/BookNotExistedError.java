@@ -9,6 +9,6 @@ public class BookNotExistedError implements ServiceError{
 
     @Override
     public Integer getCode() {
-        return 11;
+        return 403;
     }
 }
