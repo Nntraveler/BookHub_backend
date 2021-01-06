@@ -55,4 +55,9 @@ public class UserController {
     public @ResponseBody Result<String> validateAccount(@RequestBody Request<String> requestBody, HttpServletRequest request){
         return userService.validateAccount(requestBody, request);
     }
+
+    @GetMapping(path="/info")
+    public @ResponseBody Result<UserInformation> getUserInfo(HttpServletRequest request){
+        return userService.getUserInfo(request);
+    }
 }
