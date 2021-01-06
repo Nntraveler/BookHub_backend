@@ -39,21 +39,21 @@ public class CartService {
     }
 
     @Transactional
-    public Result<String> addItem(CartDTO cartDTO, HttpServletRequest request){
+    public Result<String> addItem(PurchaseDTO purchaseDTO, HttpServletRequest request){
         String userId = resolveSessionIDInCookie(request);
         if(userId==null || userId.equals("")) return Result.wrapErrorResult(new InvalidSessionIdError());
-        Optional<Cart> optionalCart = cartDAO.findCartByBook_IdAndOwner_Id(cartDTO.getBookId(), userId);
+        Optional<Cart> optionalCart = cartDAO.findCartByBook_IdAndOwner_Id(purchaseDTO.getBookId(), userId);
         if(optionalCart.isPresent()){
             return Result.wrapErrorResult(new CartAlreadyExistedError());
         }
         User user=new User();
         user.setId(userId);
-        Optional<Book> optionalBook = bookDAO.findById(cartDTO.getBookId());
+        Optional<Book> optionalBook = bookDAO.findById(purchaseDTO.getBookId());
         if(!optionalBook.isPresent()) return Result.wrapErrorResult(new BookNotExistedError());
         Book book = optionalBook.get();
-        book.setId(cartDTO.getBookId());
+        book.setId(purchaseDTO.getBookId());
         Cart cart = new Cart();
-        cart.setQuantity(cartDTO.getQuantity());
+        cart.setQuantity(purchaseDTO.getQuantity());
         cart.setBook(book);
         cart.setOwner(user);
         cartDAO.save(cart);
@@ -85,15 +85,15 @@ public class CartService {
     }
 
     @Transactional
-    public Result<String> updateItem(CartDTO cartDTO, HttpServletRequest request){
+    public Result<String> updateItem(PurchaseDTO purchaseDTO, HttpServletRequest request){
         String userId=resolveSessionIDInCookie(request);
         if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
         Optional<User> optionalUser=userDAO.findById(userId);
         if(!optionalUser.isPresent()) return  Result.wrapErrorResult(new UserNotExistedError());
-        Optional<Cart> optionalCart = cartDAO.findCartByBook_IdAndOwner_Id(cartDTO.getBookId(), userId);
+        Optional<Cart> optionalCart = cartDAO.findCartByBook_IdAndOwner_Id(purchaseDTO.getBookId(), userId);
         if(!optionalCart.isPresent()) return Result.wrapErrorResult(new CartNotExistedError());
         if(!userId.equals(optionalCart.get().getOwner())) return Result.wrapErrorResult(new PermissionDeniedError());
-        optionalCart.get().setQuantity(cartDTO.getQuantity());
+        optionalCart.get().setQuantity(purchaseDTO.getQuantity());
         cartDAO.save(optionalCart.get());
         return Result.wrapSuccessfulResult("Updated");
     }

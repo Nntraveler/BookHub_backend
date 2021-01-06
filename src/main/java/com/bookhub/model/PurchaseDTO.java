@@ -1,7 +1,7 @@
 package com.bookhub.model;
 
 
-public class CartDTO {
+public class PurchaseDTO {
     private Integer bookId;
     private Integer quantity;
 

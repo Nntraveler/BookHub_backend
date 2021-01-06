@@ -1,9 +1,6 @@
 package com.bookhub.controller;
 
-import com.bookhub.dao.CartDAO;
-import com.bookhub.model.Book;
-import com.bookhub.model.Cart;
-import com.bookhub.model.CartDTO;
+import com.bookhub.model.PurchaseDTO;
 import com.bookhub.service.CartService;
 import com.bookhub.util.Result;
 import com.bookhub.view.CartInformation;
@@ -27,8 +24,8 @@ public class CartController {
     }
 
     @PostMapping(path="/AddCart")
-    public @ResponseBody Result<String> addItem(@RequestBody CartDTO cartDTO, HttpServletRequest request){
-        return cartService.addItem(cartDTO, request);
+    public @ResponseBody Result<String> addItem(@RequestBody PurchaseDTO purchaseDTO, HttpServletRequest request){
+        return cartService.addItem(purchaseDTO, request);
     }
 
     @DeleteMapping(path="/DelCart")
@@ -37,8 +34,8 @@ public class CartController {
     }
 
     @PostMapping(path="/EditCart")
-    public @ResponseBody Result<String> editItem(@RequestBody CartDTO cartDTO, HttpServletRequest request){
-        return cartService.updateItem(cartDTO, request);
+    public @ResponseBody Result<String> editItem(@RequestBody PurchaseDTO purchaseDTO, HttpServletRequest request){
+        return cartService.updateItem(purchaseDTO, request);
     }
 
 
