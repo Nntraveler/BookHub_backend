@@ -3,6 +3,9 @@ package com.bookhub.model;
 
 public class PurchaseDTO {
     private Integer bookId;
+
+
+    private String bookName;
     private Integer quantity;
 
     public Integer getBookId() {
@@ -11,6 +14,14 @@ public class PurchaseDTO {
 
     public void setBookId(Integer bookId) {
         this.bookId = bookId;
+    }
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
     }
 
     public Integer getQuantity() {

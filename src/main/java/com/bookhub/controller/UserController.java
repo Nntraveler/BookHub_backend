@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping // Map ONLY POST Requests
+    @PostMapping("/register") // Map ONLY POST Requests
     public @ResponseBody
     Result<String> addNewUser (@RequestBody User user) {
        return userService.addNewUser(user);
@@ -35,12 +35,12 @@ public class UserController {
         return userService.updateUser(requestBody, request);
     }
 
-    @PostMapping(path="/session")
+    @PostMapping(path="/login")
     public @ResponseBody Result<String> getLoginToken(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
         return userService.getLoginToken(user, request ,response);
     }
 
-    @DeleteMapping(path="/session")
+    @DeleteMapping(path="/logout")
     public @ResponseBody Result<String> invalidateSessionId(HttpServletRequest request, HttpServletResponse response) {
        return userService.invalidateSessionId(request, response);
     }
