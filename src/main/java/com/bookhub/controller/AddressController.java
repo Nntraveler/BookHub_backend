@@ -28,17 +28,17 @@ public class AddressController {
         return addressService.getAddress(request,id);
     }
 
-    @GetMapping("GetAddr")
+    @GetMapping("/GetAddr")
     public @ResponseBody Result<Set<Address>> getAllAddress (HttpServletRequest request) {
         return addressService.getAllAddress(request);
     }
 
-    @PutMapping("/{id}")
-    public @ResponseBody Result<String> updateAddress (@RequestBody Request<Address> requestBody,@PathVariable Integer id, HttpServletRequest request){
-        return addressService.updateAddress(requestBody.getData(),id,request);
+    @PostMapping("EditAddr/{id}")
+    public @ResponseBody Result<String> updateAddress (@RequestBody Address address,@PathVariable Integer id, HttpServletRequest request){
+        return addressService.updateAddress(address,id,request);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("DelAddr/{id}")
     public @ResponseBody Result<String> deleteAddress (HttpServletRequest request,@PathVariable Integer id){
         return addressService.deleteAddress(id,request);
     }
