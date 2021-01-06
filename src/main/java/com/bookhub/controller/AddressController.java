@@ -13,14 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 @Controller // This means that this class is a Controller
-@RequestMapping(path="/addresses") // This means URL's start with /demo (after Application path)
+@RequestMapping(path="/api/addresses") // This means URL's start with /demo (after Application path)
 public class AddressController {
     @Autowired
     AddressService addressService;
 
-    @PostMapping
-    public @ResponseBody Result<String> addNewAddress (@RequestBody Request<Address> requestBody, HttpServletRequest request) {
-        return addressService.addNewAddress(request,requestBody.getData());
+    @PostMapping("/AddAddr")
+    public @ResponseBody Result<String> addNewAddress (@RequestBody Address address, HttpServletRequest request) {
+        return addressService.addNewAddress(request,address);
     }
 
     @GetMapping("/{id}")
@@ -28,7 +28,7 @@ public class AddressController {
         return addressService.getAddress(request,id);
     }
 
-    @GetMapping
+    @GetMapping("GetAddr")
     public @ResponseBody Result<Set<Address>> getAllAddress (HttpServletRequest request) {
         return addressService.getAllAddress(request);
     }

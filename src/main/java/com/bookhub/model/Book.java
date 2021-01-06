@@ -130,6 +130,8 @@ public class Book {
         this.discount = discount;
     }
 
+    public Double getPriceAfterDiscount(){return price*discount;}
+
     public Set<Cart> cartSetInstance() {
         return cartSet;
     }

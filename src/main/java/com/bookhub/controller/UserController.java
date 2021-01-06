@@ -9,13 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
 @Controller // This means that this class is a Controller
-@RequestMapping(path="/users") // This means URL's start with /demo (after Application path)
+@RequestMapping(path="/api/user") // This means URL's start with /demo (after Application path)
 public class UserController {
     @Autowired
     UserService userService;

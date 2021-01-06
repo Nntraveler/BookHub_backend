@@ -1,14 +1,13 @@
 package com.bookhub.error;
 
-public class BookNotExistedError implements ServiceError{
-
+public class CartNotExistedError implements ServiceError {
     @Override
     public String getMessage() {
-        return "Book isn't existed!";
+        return "Cart item isn't existed!";
     }
 
     @Override
     public Integer getCode() {
-        return 12;
+        return 14;
     }
 }
