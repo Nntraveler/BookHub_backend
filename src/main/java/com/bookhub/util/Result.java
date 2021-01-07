@@ -10,15 +10,15 @@ import java.util.Date;
 
 public class Result<T> implements Serializable {
 
-    private Date timestamp;
+    private Date date;
 
     private T data;
 
     private boolean success;
 
-    private String message;
+    private String msg;
 
-    private Integer code;
+    private Integer status;
 
     public Result() {
     }
@@ -27,8 +27,8 @@ public class Result<T> implements Serializable {
         Result<T> result = new Result<T>();
         result.data = data;
         result.success = true;
-        result.timestamp=new Date();
-        result.code=200;
+        result.date =new Date();
+        result.status =200;
         return result;
     }
 
@@ -36,36 +36,36 @@ public class Result<T> implements Serializable {
         Result<T> result = new Result<T>();
         result.data = data;
         result.success = true;
-        result.message = message;
-        result.timestamp=new Date();
-        result.code=200;
+        result.msg = message;
+        result.date =new Date();
+        result.status =200;
         return result;
     }
 
     public static <T> Result<T> wrapErrorResult(ServiceError error) {
         Result<T> result = new Result<T>();
         result.success = false;
-        result.message = error.getMessage();
-        result.code=error.getCode();
-        result.timestamp=new Date();
+        result.msg = error.getMessage();
+        result.status =error.getCode();
+        result.date =new Date();
         return result;
     }
 
     public static <T> Result<T> wrapErrorResult(ServiceError error, Object... extendMsg) {
         Result<T> result = new Result<T>();
         result.success = false;
-        result.message = String.format(error.getMessage(), extendMsg);
-        result.code=error.getCode();
-        result.timestamp=new Date();
+        result.msg = String.format(error.getMessage(), extendMsg);
+        result.status =error.getCode();
+        result.date =new Date();
         return result;
     }
 
     public static <T> Result<T> wrapErrorResult(String message) {
         Result<T> result = new Result<T>();
         result.success = false;
-        result.message = message;
-        result.code=-1;
-        result.timestamp=new Date();
+        result.msg = message;
+        result.status =-1;
+        result.date =new Date();
         return result;
     }
 
@@ -87,27 +87,27 @@ public class Result<T> implements Serializable {
         return this;
     }
 
-    public String getMessage() {
-        return this.message;
+    public String getMsg() {
+        return this.msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public Date getDate() {
+        return date;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public Integer getCode() {
-        return code;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
