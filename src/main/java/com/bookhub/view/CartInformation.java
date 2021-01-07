@@ -33,7 +33,7 @@ public class CartInformation {
         return cart.bookInstance().getPriceAfterDiscount();
     }
 
-    public String getImageUrl(){
+    public String getImage(){
         return cart.bookInstance().getImage();
     }
 }

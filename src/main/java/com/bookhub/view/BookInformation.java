@@ -12,7 +12,7 @@ public class BookInformation {
         this.book = book;
     }
 
-    public Integer getId() {
+    public Integer getBookId() {
         return book.getId();
     }
 
@@ -20,7 +20,7 @@ public class BookInformation {
         return book.getISBN();
     }
 
-    public String getName() {
+    public String getBookName() {
         return book.getName();
     }
 
@@ -28,7 +28,7 @@ public class BookInformation {
         return book.getPublisher();
     }
 
-    public String getBookAbstract() {
+    public String getAbstract() {
         return book.getBookAbstract();
     }
 
