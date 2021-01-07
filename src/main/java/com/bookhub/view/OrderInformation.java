@@ -7,7 +7,6 @@ import com.bookhub.model.BookOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 public class OrderInformation {
 //    private final BookOrder bookOrder;
@@ -32,11 +31,6 @@ public class OrderInformation {
 //        return bookOrder.getPrice();
 //    }
 
-    @Autowired
-    AddressDAO addressDAO;
-    @Autowired
-    OrderDetailDAO orderDetailDAO;
-
     private int orderId;
     private String name;
     private int phone;
@@ -46,7 +40,7 @@ public class OrderInformation {
     private String receiveTime;
     private Number postCost;
     private Number total;
-    private String orderStaus;
+    private String orderStatus;
 
     public OrderInformation(BookOrder bookOrder) {
         this.orderId = bookOrder.getId();
@@ -60,7 +54,7 @@ public class OrderInformation {
         this.receiveTime = bookOrder.getReceiveTime().toString();
         this.postCost = bookOrder.getPostCost();
         this.total = bookOrder.getPrice();
-        this.orderStaus = bookOrder.getStatus();
+        this.orderStatus = bookOrder.getStatus();
 
     }
 }
