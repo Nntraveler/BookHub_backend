@@ -1,16 +1,12 @@
 package com.bookhub.service;
 
-import com.bookhub.dao.AddressDAO;
-import com.bookhub.dao.BookDAO;
-import com.bookhub.dao.BookOrderDAO;
-import com.bookhub.dao.OrderDetailDAO;
-import com.bookhub.error.AddressNotExistedError;
-import com.bookhub.error.BookNotExistedError;
-import com.bookhub.error.InvalidSessionIdError;
-import com.bookhub.error.PermissionDeniedError;
+import com.bookhub.dao.*;
+import com.bookhub.error.*;
 import com.bookhub.model.*;
 import com.bookhub.util.Result;
 import com.bookhub.util.SessionValidator;
+import com.bookhub.view.OrderInformation;
+import com.bookhub.view.ViewSingleOrderInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -21,18 +17,20 @@ import java.util.*;
 
 @Service
 public class BookOrderService {
-
     @Autowired
     BookOrderDAO bookOrderDAO;
 
     @Autowired
-    OrderDetailDAO orderDetailDAO;
+    BookDAO bookDAO;
 
     @Autowired
     AddressDAO addressDAO;
 
     @Autowired
-    BookDAO bookDAO;
+    OrderDetailDAO orderDetailDAO;
+
+    @Autowired
+    UserDAO userDAO;
 
     @Autowired
     StringRedisTemplate template;
@@ -85,5 +83,68 @@ public class BookOrderService {
         return Result.wrapSuccessfulResult("Saved");
     }
 
+    public  Result<OrderInformation> getOrderDetail(HttpServletRequest request, String orderId){
+        int id = Integer.parseInt(orderId);
+
+        String userId=resolveSessionIDInCookie(request);
+        if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
+
+        Optional<BookOrder> optionalBookOrder = bookOrderDAO.findById(id);
+        if(!optionalBookOrder.isPresent()) return  Result.wrapErrorResult(new BookOrderNotExistedError());
+        return Result.wrapSuccessfulResult(new OrderInformation(optionalBookOrder.get()));
+    }
+
+    public Result <List<ViewSingleOrderInformation>> getOrders (HttpServletRequest request) {  //暂时返回所有列表
+        String userId = resolveSessionIDInCookie(request);
+        if (userId == null) return Result.wrapErrorResult(new InvalidSessionIdError());
+        Optional<User> optionalUser = userDAO.findById(userId);
+        if (!optionalUser.isPresent()) return Result.wrapErrorResult(new UserNotExistedError());
+
+        Set<Address> addressSetInstance = optionalUser.get().addressSetInstance();  //find current user's all address
+        List<Address> addressList = new ArrayList<Address>(addressSetInstance);
+        List<ViewSingleOrderInformation> viewSingleOrderInformationList = new ArrayList<>();
+        for (int i = 0; i < addressList.size(); i++) {
+            Set<BookOrder> bookOrderSet = addressList.get(i).BookOrderSetInstance(); //get all book orders per address
+            for (BookOrder bookOrder : bookOrderSet) {
+                viewSingleOrderInformationList.add(new ViewSingleOrderInformation(bookOrder));
+            }
+        }
+        return Result.wrapSuccessfulResult(viewSingleOrderInformationList);
+    }
+
+    public Result<String> editOrder(HttpServletRequest request, EditDTO editDTO){
+        String userId=resolveSessionIDInCookie(request);
+        if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
+        Optional<User> optionalUser=userDAO.findById(userId);
+        if(!optionalUser.isPresent()) return  Result.wrapErrorResult(new UserNotExistedError());
+
+        Optional<BookOrder> optionalBookOrder = bookOrderDAO.findById(Integer.parseInt(editDTO.getOrderId()));
+        if(!optionalBookOrder.isPresent()) return  Result.wrapErrorResult(new BookOrderNotExistedError());
+
+        //找到Address
+        Optional<Address> optionalAddress = addressDAO.findById(optionalBookOrder.get().getAddress());
+        if(!optionalAddress.isPresent()) return  Result.wrapErrorResult(new AddressNotExistedError());
+
+        optionalAddress.get().setName(editDTO.getReciever());
+        optionalAddress.get().setPhone(editDTO.getPhone());
+        optionalAddress.get().setLocation(editDTO.getLocation());
+        addressDAO.save(optionalAddress.get());
+        return Result.wrapSuccessfulResult("Updated");
+    }
+
+    public Result<String> deleteOrder(HttpServletRequest request, String orderId){
+        String userId=resolveSessionIDInCookie(request);
+        if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
+        Optional<User> optionalUser=userDAO.findById(userId);
+        if(!optionalUser.isPresent()) return  Result.wrapErrorResult(new UserNotExistedError());
+
+        //找到该订单
+        Optional<BookOrder> optionalBookOrder = bookOrderDAO.findById(Integer.parseInt(orderId));
+        if(!optionalBookOrder.isPresent()) return  Result.wrapErrorResult(new BookOrderNotExistedError());
+
+        //delete
+        bookOrderDAO.delete(optionalBookOrder.get());
+        return Result.wrapSuccessfulResult("Deleted");
+    }
 
 }
