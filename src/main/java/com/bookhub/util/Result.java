@@ -28,6 +28,7 @@ public class Result<T> implements Serializable {
         result.data = data;
         result.success = true;
         result.date =new Date();
+        result.msg = "OK";
         result.status =200;
         return result;
     }
