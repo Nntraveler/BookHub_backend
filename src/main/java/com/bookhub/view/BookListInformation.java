@@ -13,9 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 
 public class BookListInformation {
-    @Autowired
-    BookOrderDAO bookOrderDAO;
-
 
     private int bookId;
     private String bookName;
@@ -44,22 +41,5 @@ public class BookListInformation {
         this.quantity = quantity;
     }
 
-    public List<BookListInformation> getList(int orderId){
-
-        Optional<BookOrder> optionalBookOrder = bookOrderDAO.findById(orderId);
-        if(!optionalBookOrder.isPresent()) return (List<BookListInformation>) Result.wrapErrorResult(new BookOrderNotExistedError());
-        List<BookListInformation> bookListInformationList = new ArrayList<>();
-        Set<OrderDetail> orderDetailSet = optionalBookOrder.get().orderDetailSetInstance();
-        for (OrderDetail orderDetail: orderDetailSet ) {
-            BookListInformation bookListInformation = new BookListInformation();
-            bookListInformation.setBookId(orderDetail.getBook());
-            bookListInformation.setBookName(orderDetail.bookInstance().getName());
-            bookListInformation.setQuantity(orderDetail.getQuantity());
-
-            bookListInformationList.add(bookListInformation);
-        }
-
-        return bookListInformationList;
-    }
 
 }

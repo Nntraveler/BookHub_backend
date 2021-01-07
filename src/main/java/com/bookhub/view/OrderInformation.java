@@ -62,8 +62,5 @@ public class OrderInformation {
         this.total = bookOrder.getPrice();
         this.orderStaus = bookOrder.getStatus();
 
-        BookListInformation bookListInformation = new BookListInformation();
-        this.bookList = bookListInformation.getList(this.orderId);
-
     }
 }
