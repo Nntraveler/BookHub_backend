@@ -4,6 +4,7 @@ import com.bookhub.model.EditDTO;
 import com.bookhub.model.OrderDTO;
 import com.bookhub.service.BookOrderService;
 import com.bookhub.util.Result;
+import com.bookhub.view.DetailedOrderInformation;
 import com.bookhub.view.OrderInformation;
 import com.bookhub.view.ViewSingleOrderInformation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class OrderController {
     }
 
     @GetMapping("/GetOrderDetail")
-    public @ResponseBody Result<OrderInformation> getOrderDetail(HttpServletRequest request, @RequestParam String orderId){
+    public @ResponseBody Result<DetailedOrderInformation> getOrderDetail(HttpServletRequest request, @RequestParam String orderId){
         return bookOrderService.getOrderDetail(request,orderId);
     }
 

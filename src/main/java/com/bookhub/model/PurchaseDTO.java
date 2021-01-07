@@ -3,8 +3,6 @@ package com.bookhub.model;
 
 public class PurchaseDTO {
     private Integer bookId;
-
-
     private String bookName;
     private Integer quantity;
 

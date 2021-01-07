@@ -51,15 +51,13 @@ public class OrderInformation {
     public OrderInformation(BookOrder bookOrder) {
         this.orderId = bookOrder.getId();
 
-        Integer addressId = bookOrder.getAddress();
-        Optional<Address> optionalAddress = addressDAO.findById(addressId);
-        Address address = optionalAddress.get();
+        Address address = bookOrder.addressInstance();
         this.name = address.getName();
         this.phone = Integer.parseInt(address.getPhone());
         this.location = address.getLocation();
 
-        this.startTime = String.valueOf(bookOrder.getStartTime());
-        this.receiveTime = String.valueOf(bookOrder.getReceiveTime());
+        this.startTime = bookOrder.getStartTime().toString();
+        this.receiveTime = bookOrder.getReceiveTime().toString();
         this.postCost = bookOrder.getPostCost();
         this.total = bookOrder.getPrice();
         this.orderStaus = bookOrder.getStatus();

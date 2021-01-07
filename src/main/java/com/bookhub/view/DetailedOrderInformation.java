@@ -3,6 +3,7 @@ package com.bookhub.view;
 import com.bookhub.model.BookOrder;
 import com.bookhub.model.PurchaseDTO;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,13 +29,13 @@ public class DetailedOrderInformation {
         return bookOrder.addressInstance().getLocation();
     }
     public List<PurchaseDTO> getBookList(){
-        return purchaseDTOList;
+        return this.purchaseDTOList;
     }
-    public String getStartTime(){
-        return bookOrder.getStartTime().toString();
+    public Date getStartTime(){
+        return bookOrder.getStartTime();
     }
-    public String getReceiveTime(){
-        return bookOrder.getReceiveTime().toString();
+    public Date getReceiveTime(){
+        return bookOrder.getReceiveTime();
     }
     public Double getPostCost(){
         return bookOrder.getPostCost();

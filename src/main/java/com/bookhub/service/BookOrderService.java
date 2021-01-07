@@ -5,6 +5,7 @@ import com.bookhub.error.*;
 import com.bookhub.model.*;
 import com.bookhub.util.Result;
 import com.bookhub.util.SessionValidator;
+import com.bookhub.view.DetailedOrderInformation;
 import com.bookhub.view.OrderInformation;
 import com.bookhub.view.ViewSingleOrderInformation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,15 +84,26 @@ public class BookOrderService {
         return Result.wrapSuccessfulResult("Saved");
     }
 
-    public  Result<OrderInformation> getOrderDetail(HttpServletRequest request, String orderId){
+    public  Result<DetailedOrderInformation> getOrderDetail(HttpServletRequest request, String orderId){
         int id = Integer.parseInt(orderId);
 
         String userId=resolveSessionIDInCookie(request);
         if(userId==null) return Result.wrapErrorResult(new InvalidSessionIdError());
 
         Optional<BookOrder> optionalBookOrder = bookOrderDAO.findById(id);
-        if(!optionalBookOrder.isPresent()) return  Result.wrapErrorResult(new BookOrderNotExistedError());
-        return Result.wrapSuccessfulResult(new OrderInformation(optionalBookOrder.get()));
+        if(!optionalBookOrder.isPresent()) return Result.wrapErrorResult(new BookOrderNotExistedError());
+        Iterable<OrderDetail> orderDetails = orderDetailDAO.getAllByBookOrder_Id(id);
+        List<PurchaseDTO> purchaseDTOList = new ArrayList<>();
+        for(OrderDetail orderDetail : orderDetails){
+            PurchaseDTO purchaseDTO = new PurchaseDTO();
+            purchaseDTO.setBookId(orderDetail.getBook());
+            purchaseDTO.setBookName(orderDetail.bookInstance().getName());
+            purchaseDTO.setQuantity(orderDetail.getQuantity());
+            purchaseDTOList.add(purchaseDTO);
+        }
+
+        DetailedOrderInformation detailedOrderInformation = new DetailedOrderInformation(optionalBookOrder.get(), purchaseDTOList);
+        return Result.wrapSuccessfulResult(detailedOrderInformation);
     }
 
     public Result <List<ViewSingleOrderInformation>> getOrders (HttpServletRequest request) {  //暂时返回所有列表
